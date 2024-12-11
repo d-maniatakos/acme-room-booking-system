@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: acme-password
+      POSTGRES_USER: acme-user
+      POSTGRES_DB: room-booking-system-db
+    ports:
+      - "54320:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data 
+ 
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8081:8080
+
+volumes:
+  pgdata:
