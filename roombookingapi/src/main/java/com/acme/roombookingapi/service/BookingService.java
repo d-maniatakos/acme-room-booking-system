@@ -3,12 +3,16 @@ package com.acme.roombookingapi.service;
 import com.acme.roombookingapi.model.Booking;
 import com.acme.roombookingapi.transfer.dto.CreateBookingRequestCommand;
 import com.acme.roombookingapi.transfer.dto.RetrieveBookingsQuery;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
+import org.springframework.validation.annotation.Validated;
 
+@Validated
 public interface BookingService {
-  public Booking create(CreateBookingRequestCommand createRoomRequestCommand);
+  public Booking create(@Valid CreateBookingRequestCommand createRoomRequestCommand);
 
-  public Page<Booking> getBookings(RetrieveBookingsQuery query);
+  public Page<Booking> getBookings(@Valid RetrieveBookingsQuery query);
 
-  public void delete(Long id);
+  public void delete(@NotNull Long id);
 }
