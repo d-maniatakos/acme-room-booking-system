@@ -12,7 +12,7 @@ import org.springframework.validation.annotation.Validated;
 public interface BookingService {
   public Booking create(@Valid CreateBookingRequestCommand createRoomRequestCommand);
 
-  public Page<Booking> getBookings(@Valid RetrieveBookingsQuery query);
+  public Page<Booking> getByQuery(@Valid RetrieveBookingsQuery query);
 
-  public void delete(@NotNull Long id);
+  public void cancel(@NotNull Long id);
 }

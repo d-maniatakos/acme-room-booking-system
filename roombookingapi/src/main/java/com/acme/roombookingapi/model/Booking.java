@@ -3,12 +3,14 @@ package com.acme.roombookingapi.model;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "BOOKINGS")
 public class Booking {
   @Id

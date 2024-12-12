@@ -1,8 +1,6 @@
 package com.acme.roombookingapi.service.impl;
 
-import com.acme.roombookingapi.exception.BookingNotFoundException;
-import com.acme.roombookingapi.exception.EmployeeEmailNotFoundException;
-import com.acme.roombookingapi.exception.RoomNotFoundException;
+import com.acme.roombookingapi.exception.*;
 import com.acme.roombookingapi.model.Booking;
 import com.acme.roombookingapi.repository.BookingRepository;
 import com.acme.roombookingapi.repository.EmployeeRepository;
@@ -10,6 +8,10 @@ import com.acme.roombookingapi.repository.RoomRepository;
 import com.acme.roombookingapi.service.BookingService;
 import com.acme.roombookingapi.transfer.dto.CreateBookingRequestCommand;
 import com.acme.roombookingapi.transfer.dto.RetrieveBookingsQuery;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -38,26 +40,70 @@ public class BookingServiceImpl implements BookingService {
             .findById(createBookingRequestCommand.getRoomId())
             .orElseThrow(() -> new RoomNotFoundException(createBookingRequestCommand.getRoomId()));
 
+    // Employees can book a room for at least 1 hour or consecutive multiples of 1 hour (2, 3, 4,
+    // ...)
+    if (!isTimeValid(
+        createBookingRequestCommand.getDate(),
+        createBookingRequestCommand.getTimeFrom(),
+        createBookingRequestCommand.getTimeTo())) {
+      throw new BookingInvalidTimeException();
+    }
+
+    if (bookingRepository.overlappingBookingExists(
+        room,
+        createBookingRequestCommand.getDate(),
+        createBookingRequestCommand.getTimeFrom(),
+        createBookingRequestCommand.getTimeTo())) {
+      throw new BookingConflictException(room.getId());
+    }
+
     var newBooking = new Booking();
     newBooking.setEmployee(employee);
     newBooking.setRoom(room);
     newBooking.setDate(createBookingRequestCommand.getDate());
     newBooking.setTimeFrom(createBookingRequestCommand.getTimeFrom());
     newBooking.setTimeTo(createBookingRequestCommand.getTimeTo());
+
     return bookingRepository.save(newBooking);
   }
 
   @Override
-  public Page<Booking> getBookings(RetrieveBookingsQuery query) {
+  public Page<Booking> getByQuery(RetrieveBookingsQuery query) {
     var pageable = PageRequest.of(query.getPage(), query.getPageSize());
 
     return bookingRepository.findAllByRoomIdAndDate(query.getRoomId(), query.getDate(), pageable);
   }
 
-  public void delete(Long id) {
+  public void cancel(Long id) {
     var booking =
         bookingRepository.findById(id).orElseThrow(() -> new BookingNotFoundException(id));
 
+    // Can’t cancel a booking in the past
+    if (isBookingInPast(booking)) {
+      throw new BookingInPastException(booking.getId());
+    }
+
     bookingRepository.delete(booking);
+  }
+
+  private boolean isBookingInPast(Booking booking) {
+    return isBookingInPast(booking.getDate(), booking.getTimeTo());
+  }
+
+  private boolean isBookingInPast(LocalDate date, LocalTime timeTo) {
+    var bookingEndDateTime = LocalDateTime.of(date, timeTo);
+    var currentDateTime = LocalDateTime.now();
+
+    return bookingEndDateTime.isBefore(currentDateTime);
+  }
+
+  private boolean isTimeValid(LocalDate date, LocalTime timeFrom, LocalTime timeTo) {
+
+    var durationInMinutes = ChronoUnit.MINUTES.between(timeFrom, timeTo);
+
+    return timeFrom.isBefore(timeTo)
+        && durationInMinutes >= 60
+        && durationInMinutes % 60 == 0
+        && !isBookingInPast(date, timeTo);
   }
 }

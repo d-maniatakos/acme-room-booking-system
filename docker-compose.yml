@@ -1,4 +1,17 @@
 services:
+  api:
+    build:
+      context: ./roombookingapi
+      dockerfile: Dockerfile
+    environment:
+      DB_URL: postgres:5432/room-booking-system-db
+      DB_USER: acme-user
+      DB_PASSWORD: acme-password
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+
   postgres:
     image: postgres
     restart: always
@@ -15,7 +28,7 @@ services:
     image: adminer
     restart: always
     ports:
-      - 8081:8080
+      - "8081:8080"
 
 volumes:
   pgdata:

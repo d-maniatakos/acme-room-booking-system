@@ -10,5 +10,5 @@ import org.springframework.validation.annotation.Validated;
 public interface RoomService {
   public Room create(@Valid CreateRoomRequestCommand createRoomRequestCommand);
 
-  public List<Room> getAllRooms();
+  public List<Room> getAll();
 }

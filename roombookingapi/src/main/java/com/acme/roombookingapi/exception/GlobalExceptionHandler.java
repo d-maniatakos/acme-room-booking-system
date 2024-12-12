@@ -50,6 +50,34 @@ public class GlobalExceptionHandler {
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionDto);
   }
 
+  @ExceptionHandler({BookingInPastException.class})
+  public ResponseEntity<Object> handleBookingInPastException(BookingInPastException exception) {
+
+    var exceptionDto =
+        ExceptionDto.builder().code(exception.getCode()).message(exception.getMessage()).build();
+
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionDto);
+  }
+
+  @ExceptionHandler({BookingInvalidTimeException.class})
+  public ResponseEntity<Object> handleBookingInvalidTimeException(
+      BookingInvalidTimeException exception) {
+
+    var exceptionDto =
+        ExceptionDto.builder().code(exception.getCode()).message(exception.getMessage()).build();
+
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionDto);
+  }
+
+  @ExceptionHandler({BookingConflictException.class})
+  public ResponseEntity<Object> handleBookingConflictException(BookingConflictException exception) {
+
+    var exceptionDto =
+        ExceptionDto.builder().code(exception.getCode()).message(exception.getMessage()).build();
+
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionDto);
+  }
+
   @ExceptionHandler({BookingNotFoundException.class})
   public ResponseEntity<Object> handleBookingNotFoundException(BookingNotFoundException exception) {
 
