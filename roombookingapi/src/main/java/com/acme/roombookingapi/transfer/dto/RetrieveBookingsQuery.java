@@ -20,12 +20,10 @@ public class RetrieveBookingsQuery {
   @Schema(example = "2024-12-12")
   private LocalDate date;
 
-  @NotNull
   @Schema(example = "0")
-  private int page = 0;
+  private Integer page;
 
   @Schema(example = "100")
-  @NotNull
   @Positive
-  private int pageSize = 100;
+  private Integer pageSize;
 }

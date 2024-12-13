@@ -1,11 +1,9 @@
 package com.acme.roombookingapi.controller;
 
 import com.acme.roombookingapi.service.BookingService;
-import com.acme.roombookingapi.transfer.dto.BookingDto;
-import com.acme.roombookingapi.transfer.dto.CreateBookingRequestCommand;
-import com.acme.roombookingapi.transfer.dto.ExceptionDto;
-import com.acme.roombookingapi.transfer.dto.RetrieveBookingsQuery;
+import com.acme.roombookingapi.transfer.dto.*;
 import com.acme.roombookingapi.transfer.mapper.BookingMapper;
+import com.acme.roombookingapi.transfer.mapper.PageMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -13,7 +11,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,6 +21,7 @@ public class BookingController {
 
   private final BookingService bookingService;
   private final BookingMapper bookingMapper;
+  private final PageMapper pageMapper;
 
   @PostMapping
   @Operation(
@@ -68,9 +66,9 @@ public class BookingController {
                     mediaType = "application/json",
                     schema = @Schema(implementation = ExceptionDto.class))),
       })
-  public Page<BookingDto> getBookings(RetrieveBookingsQuery query) {
+  public PageDto getBookings(RetrieveBookingsQuery query) {
     var bookings = bookingService.getByQuery(query);
-    return bookings.map(bookingMapper::bookingToBookingDto);
+    return pageMapper.pageToPageDto(bookings.map(bookingMapper::bookingToBookingDto));
   }
 
   @DeleteMapping("/{id}")

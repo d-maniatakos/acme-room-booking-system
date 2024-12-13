@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -69,7 +70,11 @@ public class BookingServiceImpl implements BookingService {
 
   @Override
   public Page<Booking> getByQuery(RetrieveBookingsQuery query) {
-    var pageable = PageRequest.of(query.getPage(), query.getPageSize());
+
+    var page = Objects.nonNull(query.getPage()) ? query.getPage() : 0;
+    var pageSize = Objects.nonNull(query.getPageSize()) ? query.getPageSize() : 100;
+
+    var pageable = PageRequest.of(page, pageSize);
 
     return bookingRepository.findAllByRoomIdAndDate(query.getRoomId(), query.getDate(), pageable);
   }
