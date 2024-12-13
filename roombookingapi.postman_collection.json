@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "9783bf16-1245-4fa0-8d56-de44cc939313",
-		"name": "Room Booking API",
+		"name": "Room Booking",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "22649137"
 	},
@@ -13,7 +13,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"dionysis\",\r\n    \"email\": \"dionysis.man2iatakos@yahoo.com\"\r\n}",
+					"raw": "{\r\n    \"name\": \"Dion Man\",\r\n    \"email\": \"dionman@acme.com\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -41,7 +41,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"zeus\"\r\n}",
+					"raw": "{\r\n    \"name\": \"Acme Main Meeting Room 1\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -88,7 +88,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"zeus\"\r\n}",
+					"raw": "{\r\n  \"employeeEmail\": \"someone@acme.com\",\r\n  \"roomId\": 205,\r\n  \"date\": \"2027-12-12\",\r\n  \"timeFrom\": \"15:00\",\r\n  \"timeTo\": \"18:00\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -96,14 +96,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/rooms",
+					"raw": "http://localhost:8080/bookings",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"rooms"
+						"bookings"
 					]
 				}
 			},
@@ -114,17 +114,8 @@
 			"request": {
 				"method": "DELETE",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"zeus\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
-					"raw": "http://localhost:8080/bookings/1",
+					"raw": "http://localhost:8080/bookings/402",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -132,7 +123,7 @@
 					"port": "8080",
 					"path": [
 						"bookings",
-						"1"
+						"402"
 					]
 				}
 			},
